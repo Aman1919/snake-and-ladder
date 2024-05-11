@@ -7,7 +7,8 @@ export default class Square{
         position:Position;
         color: string;
         snakeorladder: null  | SnakeOrLadder;
-        players:Player[]  
+        players: Player[]  
+        context:CanvasRenderingContext2D
 constructor(width:number,height:number,context:CanvasRenderingContext2D,position:Position){
         this.width = width;
         this.height = height;
@@ -15,24 +16,42 @@ constructor(width:number,height:number,context:CanvasRenderingContext2D,position
         this.snakeorladder = null;
         this.position = position
         this.players = []
-        this.draw(context);
+        this.context = context;
+        this.Draw();
         }
         
-        draw(context:CanvasRenderingContext2D) {
-                context.fillStyle = this.color;
+        Draw() {
+                this.drawSquare();
+                this.players.forEach((player) => {
+                        player.drawPlayers(this.context);
+                })
+        }
+        
+        drawSquare() {
+                
                 const p = this.position;
-                context.fillRect(p.x, p.y, this.width, this.height)
-                context.strokeStyle = "2px black";
-                context.strokeRect(p.x, p.y, this.width, this.height)
-                context.fillStyle = 'black'
-                context.font = '20px sans-serif'
-                context.textAlign = 'left'
-                context.textBaseline = 'top'
-                context.fillText(p.num.toString(), p.x+10, p.y+10)
+                this.context.clearRect(p.x*this.width, p.y*this.height, this.width, this.height)
+                this.context.fillStyle = this.color;
+                this.context.fillRect(p.x*this.width, p.y*this.height, this.width, this.height)
+                this.context.strokeStyle = "2px black";
+                this.context.strokeRect(p.x*this.width, p.y*this.height, this.width, this.height)
+                this.context.fillStyle = 'black'
+                this.context.font = '20px sans-serif'
+                this.context.textAlign = 'left'
+                this.context.textBaseline = 'top'
+                this.context.fillText(p.num.toString(), p.x*this.width+10, p.y*this.height+10)
         }
         
         addPlayer(player: Player) {
                 this.players.push(player);
+        }
+        
+        removePlayer(playerColor:string) {
+                const players = this.players.filter(pl => {
+              return  pl.color !==playerColor
+                })
+                this.players = players;
+                this.Draw();
         }
         
         getPositionNum() {

@@ -15,7 +15,7 @@ export default class Game{
                 this.board = new Board(canvas.width, canvas.height, context, this);
                 this.players = this.CreatePlayers(players);
                 this.turn = 0;
-                console.log(this.players[this.turn]);
+                console.log(this.state);
         }
         
         CreatePlayers(players: string[]) {
@@ -27,13 +27,32 @@ export default class Game{
                 return res
         }
         
-        move(diceNumber:number) {
-                 const num = this.players[this.turn].square.getPositionNum();
-                let i  = Math.floor(num/10);
-                let j = num % 10-1;
-                if (j > 9) i++;
-                else j++;
-                console.log(i,j,this.state[i][j]);
+        move(diceNumber: number) {
+                const player =  this.players[this.turn]
+                // if (!player.isPlaying) {
+                //      if(diceNumber===1)player.isPlaying = true;
+                //         this.changeTurn();                
+                //         return
+                // }
+                
+                
+                
+                const pos = player.getPos();
+                const num = pos.num;
+                let i = Math.floor(num/10);
+                let j = num % 10;
+                if (j + diceNumber > 10) {
+                        i++;
+                        const a = j + diceNumber;
+                        j =a%10;
+                } else {
+                        j += diceNumber-1;
+                }                       
+                const nextSquare = this.state[i][j];                
+                player.takeStep(nextSquare)
+                this.changeTurn();
+                console.log(i, j, diceNumber);
+        
         }
         
         

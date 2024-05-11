@@ -22,11 +22,13 @@ export default class Board{
                         for (let j = 0; j < 10; j++) {
                         num = i * 10 + j + 1;
                         if (i % 2) {
-                        const position = new Position(this.width - (j+1)*squarewidth,startingHeight,num)
+                                const position = new Position(
+                                        Math.floor((this.width - (j + 1) * squarewidth) / squarewidth),
+                                        Math.floor(startingHeight/squareheight), num)
                         const s = new Square(squarewidth, squareheight, context, position)
                         this.game.state[i][j] = s
                         } else {
-                        const position = new Position(j*squarewidth,startingHeight,num)
+                        const position = new Position(j,Math.floor(startingHeight/squareheight),num)
                         const s = new Square(squarewidth,squareheight,context,position)
                         this.game.state[i][j] = s                       
                         }
