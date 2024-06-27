@@ -1,3 +1,14 @@
-const PositionToCordinationMap = {}
+enum squareColor{
+        blue = "#2DA2D8",
+        orange = "#E3AD7D"
+}
 
-export {PositionToCordinationMap}
+const playersColor = [
+        'red',
+         'blue',
+        'green',
+         'yellow'
+]
+
+
+export { squareColor,playersColor}

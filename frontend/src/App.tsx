@@ -1,41 +1,36 @@
+import { DiceAtom, isAnimateAtom } from "./store";
+import { RecoilRoot, useRecoilState, useRecoilValue } from "recoil";
+import Canvas from "./Game/canvas";
 
-import { useMemo, useState } from 'react'
-import './App.css'
-import Canvas from './canvas'
-import { SelectPlayerBox } from './components/selectplayers'
-import Dice from './dice'
-import { useRecoilValue } from 'recoil'
-import { playersAtom } from './store'
 function App() {
-  const selectPlayers = useRecoilValue(playersAtom);
-  const [startGame, setStart] = useState(false)
-  const startFlag = useMemo(() => {
-    if (selectPlayers.length > 1 && startGame) {
-      return true;
-    } else {
-      setStart(false)
-    return false}
-  },[selectPlayers, startGame])
   return (
-      <div className='contanier'>
-<h1 className='text-2xl font-bold'>Snake and Ladders Game</h1>
-      {(selectPlayers.length > 1 && startFlag) ? <Game selectPlayers={selectPlayers} /> :<SelectPlayerBox setStart={setStart} ></SelectPlayerBox>}
+    <div className="App">
+      <h1>Snake and ladder Game</h1>
+      <div className="con">
+        <RecoilRoot>
+        <Canvas></Canvas>
+          <Dice />
+          </RecoilRoot>
+      </div>
     </div>
-  )
+  );
 }
 
-interface gameprops {
-selectPlayers:string[]
+const Dice = () => {
+  const [num, setNum] = useRecoilState(DiceAtom);
+  const isAnimate = useRecoilValue(isAnimateAtom)
+   function Roll() {
+     if (isAnimate) return;
+     const a = Math.floor(Math.random() * 6) + 1;
+     setNum(a);
+        }
+  return (
+    <div>
+      <p>Roll Number: { num}</p> 
+    <button onClick={Roll}>Roll</button>
+    </div>
+)
+
 }
 
-function Game ({selectPlayers}:gameprops){
-
-  return <div className='flex justify-around  align-center flex-wrap'>
-  <Canvas></Canvas>
-  <Dice/>
-  </div>
-}
-
-
-
-export default App
+export default App;

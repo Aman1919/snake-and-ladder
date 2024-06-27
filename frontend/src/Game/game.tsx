@@ -1,75 +1,40 @@
-import Board from "./board";
-import Player from "./player";
-import Square from "./square";
- 
+import Board from './board';
+import Move from './move';
+import Player from './player';
+import { playersColor } from './utils';
 export default class Game{
-        canvas: HTMLCanvasElement
-        context: CanvasRenderingContext2D
-        board: Board;
-        players: Player[];
-        turn: number;
-        state:Square[][]= [[],[],[],[],[],[],[],[],[],[]]
-        constructor(canvas:HTMLCanvasElement,context:CanvasRenderingContext2D,players:string[]) {
-                this.canvas = canvas;
-                this.context = context;
-                this.board = new Board(canvas.width, canvas.height, context, this);
-                this.players = this.CreatePlayers(players);
-                this.turn = 0;
-                console.log(this.state);
+        Board: Board;
+        turn: number = 0;
+        move: Move;
+        players: Player[] = [];
+        constructor(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
+                this.Board = new Board(context, canvas);
+                this.move = new Move(this.Board);
+                this.createPlayer();        
         }
         
-        CreatePlayers(players: string[]) {
-                const res = [];
-                for (let i = 0; i < players.length; i++){
-                res.push(new Player(players[i],this.state[0][0],this.context))
-                }
+        createPlayer() {
                 
-                return res
+                for (let i = 0;i<2;i++){
+                  this.players.push(new Player(playersColor[i],this.Board.Squares[0].position,this.Board.canvas_module))
+                }
+                this.players.forEach(pl => {
+                this.Board.Squares[0].addPlayer(pl)
+                })
         }
         
-        move(diceNumber: number) {
+        DiceRolled(DiceNumber: number) {
                 const player =  this.players[this.turn]
-                // if (!player.isPlaying) {
-                //      if(diceNumber===1)player.isPlaying = true;
-                //         this.changeTurn();                
-                //         return
-                // }
-                
-                
-                
-                const pos = player.getPos();
-                const num = pos.num;
-                let i = Math.floor(num/10);
-                let j = num % 10;
-                if (j + diceNumber > 10) {
-                        i++;
-                        const a = j + diceNumber;
-                        j =a%10;
-                } else {
-                        j += diceNumber-1;
-                }                       
-                const nextSquare = this.state[i][j];                
-                player.takeStep(nextSquare)
-                this.changeTurn();
-                console.log(i, j, diceNumber);
-        
+                this.move.move(player,DiceNumber);
+                this.ChangeTurn();
         }
         
+        ChangeTurn() {
+                this.turn = this.turn + 1;
+                if (this.turn === this.players.length) this.turn = 0;
+        }
         
-        changeTurn() {
-                const i = this.turn+1;
-                if (i > this.players.length - 1) {
-                this.turn = 0
-                } else {
-                this.turn = i
-                }
+        isAnimating() {
+                return (this.move.forAnimate === null);
         }
 }
-
-
-/**
-For now we have board for snake and ladder 
-Create a dice which genrates a random number and show the rotation of the dice 
-show the player
-move the player when dice is clicked
- */

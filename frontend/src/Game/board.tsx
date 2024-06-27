@@ -1,39 +1,57 @@
+import Canvas_Module from "./canvas_module";
+import Player from "./player";
+import Position from "./position";
 import Square from "./square";
-import Position from "./Position";
-import Game from "./game";
+import { squareColor } from "./utils";
 
-export default class Board{
-        width: number;
-        height: number;
-        game: Game;
-        constructor(width:number,height:number,context:CanvasRenderingContext2D,game:Game) {
-                this.width = width;
-                this.height = height;
-                this.game = game
-                this.Initialize(context);
+export default class Board {
+        canvas_module: Canvas_Module;
+        canvas: HTMLCanvasElement;
+        Squares: Square[] = new Array(100);
+        
+        constructor(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
+                this.canvas_module = new Canvas_Module(context, canvas);       
+                this.canvas = canvas;
+                this.Init();
+               
         }
-     private   Initialize(context:CanvasRenderingContext2D) {
-                context.clearRect(0, 0, this.width, this.height);
-                const squareheight = this.height / 10;
-                const squarewidth = this.width / 10;
-                let startingHeight = this.height - squareheight;
-                let num = 1;
-                for (let i = 0; i < 10; i++) {
-                        for (let j = 0; j < 10; j++) {
-                        num = i * 10 + j + 1;
-                        if (i % 2) {
-                                const position = new Position(
-                                        Math.floor((this.width - (j + 1) * squarewidth) / squarewidth),
-                                        Math.floor(startingHeight/squareheight), num)
-                        const s = new Square(squarewidth, squareheight, context, position)
-                        this.game.state[i][j] = s
-                        } else {
-                        const position = new Position(j,Math.floor(startingHeight/squareheight),num)
-                        const s = new Square(squarewidth,squareheight,context,position)
-                        this.game.state[i][j] = s                       
+        
+        Init() {
+                const width = this.canvas.width;;
+                const height = this.canvas.height;
+                const squareWidth = width / 10;
+                const squareHeight = height / 10;
+                let startingHeight = height - squareHeight;
+                let num = 1;               
+                for (let row = 0; row < 10; row++){
+                        let position;
+                        for (let col = 0; col < 10; col++){
+                            num = row * 10 + col + 1;
+                           if (row % 2) position = new Position(width - squareWidth*(col+1),startingHeight,num);
+                           else position = new Position(col*squareWidth,startingHeight,num)
+                                const color = this.selectSquareColor(row, col);
+                                const square = new Square(color, position,this.canvas_module);
+                                this.Squares[num - 1] = square;
                         }
-                        }
-                        startingHeight -= squareheight;
+                     startingHeight -= squareHeight; 
                 }
+                console.log(this.Squares);
+                
+        }
+        
+        resetBoard(color:string) {
+                this.Squares.forEach(square => {
+                       if (square.players.every(pl => pl.color !== color)) { square.draw() }
+                       else square.drawSquare();
+                })
+        }
+        
+        selectSquareColor(i: number, j: number) {
+                let ans = ((i % 2!==0 && j % 2!==0) || (i % 2 === 0 && j % 2 === 0)) ? squareColor.blue : squareColor.orange;
+                if (i % 2) {
+                        ans = (ans === squareColor.blue) ? squareColor.orange : squareColor.blue;
+                }
+                return ans;
         }
 }
+

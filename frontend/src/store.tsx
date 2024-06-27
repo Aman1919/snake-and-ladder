@@ -1,14 +1,13 @@
 import { atom } from "recoil";
 
-const diceNumberAtom = atom({
-        key: "diceNumber",
-        default: 0
+const DiceAtom = atom({
+        key: "DiceNumberAtom",
+        default:0
 })
 
-const playersAtom = atom({
-        key: "players",
-        default:[] as string[]
+const isAnimateAtom = atom({
+        key: "Isanimating",
+        default:false
 })
 
-export {diceNumberAtom,playersAtom}
-
+export { DiceAtom ,isAnimateAtom};

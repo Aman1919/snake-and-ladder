@@ -1,60 +1,51 @@
-import SnakeOrLadder from "./Snake";
-import Position from "./Position";
-import Player from "./player";
+import Position from "./position";
+import Player from "./player"; 
+import Canvas_Module from "./canvas_module";
+
 export default class Square{
-        width: number;
-        height: number;
-        position:Position;
         color: string;
-        snakeorladder: null  | SnakeOrLadder;
-        players: Player[]  
-        context:CanvasRenderingContext2D
-constructor(width:number,height:number,context:CanvasRenderingContext2D,position:Position){
-        this.width = width;
-        this.height = height;
-        this.color = '#E4C59E';
-        this.snakeorladder = null;
-        this.position = position
-        this.players = []
-        this.context = context;
-        this.Draw();
+        players:Player[] = [];
+        position: Position;
+        canvas_module: Canvas_Module;
+        snakeorladder = null;
+        
+        constructor(color: string, position: Position,canvas_module:Canvas_Module) {
+                this.color = color;
+                this.position = position;
+                this.snakeorladder = null;
+                this.canvas_module = canvas_module;       
+                this.draw();                
         }
         
-        Draw() {
+        draw() {
                 this.drawSquare();
-                this.players.forEach((player) => {
-                        player.drawPlayers(this.context);
-                })
+                this.drawPlayers();
+        }
+        
+        drawPlayers() {
+                this.players.forEach((player, i) => {player.draw(i)})
         }
         
         drawSquare() {
-                
-                const p = this.position;
-                this.context.clearRect(p.x*this.width, p.y*this.height, this.width, this.height)
-                this.context.fillStyle = this.color;
-                this.context.fillRect(p.x*this.width, p.y*this.height, this.width, this.height)
-                this.context.strokeStyle = "2px black";
-                this.context.strokeRect(p.x*this.width, p.y*this.height, this.width, this.height)
-                this.context.fillStyle = 'black'
-                this.context.font = '20px sans-serif'
-                this.context.textAlign = 'left'
-                this.context.textBaseline = 'top'
-                this.context.fillText(p.num.toString(), p.x*this.width+10, p.y*this.height+10)
+                this.canvas_module.draw_board_square(this.position, this.color);
+        }
+        
+        setPosition(pos: Position) {
+                this.position = pos;
+        }
+        
+        getPosition() {
+                return this.position;                
         }
         
         addPlayer(player: Player) {
                 this.players.push(player);
+                player.setPosition(this.position);
+                this.draw();
         }
         
-        removePlayer(playerColor:string) {
-                const players = this.players.filter(pl => {
-              return  pl.color !==playerColor
-                })
-                this.players = players;
-                this.Draw();
-        }
-        
-        getPositionNum() {
-                return this.position.num;
+        removePlayer(player: Player) {
+                this.players = this.players.filter(p => p.color !== player.color);
+                this.draw()
         }
 }
