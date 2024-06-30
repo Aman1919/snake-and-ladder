@@ -15,7 +15,7 @@ export default class Move{
     move(player: Player, DiceNumber: number) {
             if (this.forAnimate) return;
                 this.setAnimate(player,DiceNumber);
-              this.takeStep();
+            this.takeStep();
           console.log(this.player, this.forAnimate);      
           
         }
@@ -47,7 +47,7 @@ export default class Move{
                         this.speed.y  = 0
                         this.forAnimate.upward = 0;
                 }
-                
+
                 if (num % 10 === 0 && num !== 0) {
                         this.speed.y = 2;
                         this.forAnimate.upward = height;
@@ -59,9 +59,15 @@ export default class Move{
        animate() {
                if (!this.player || !this.forAnimate) return;
                if (this.CheckCollison()) {
+                       if (this.forAnimate.FinalSquare.snakeorladder) {
+               this.checkForSnakeAndLadder();
+                       
+                       } else {
                        this.forAnimate.FinalSquare.addPlayer(this.player); 
                        this.forAnimate = null;
-                       this.speed = {x:0,y:0};
+                       this.speed = { x: 0, y: 0 };
+                       this.board.resetSnakeAndLadders();
+                       }
                        return;
                }
                
@@ -73,11 +79,42 @@ export default class Move{
                 
                }
                this.controlSpeed(this.forAnimate.position);
-                        
                 this.board.canvas_module.clear_board();
                this.board.resetBoard(this.player.color);
                 this.board.canvas_module.draw_circle(this.forAnimate.position, this.player.color);
               requestAnimationFrame(this.animate.bind(this));
+        }
+        
+        animate2() {
+                if (!this.forAnimate||!this.player) return;
+                if (this.CheckCoor(this.forAnimate.position, this.forAnimate.FinalSquare.position)) {
+                       this.forAnimate.FinalSquare.addPlayer(this.player); 
+                       this.forAnimate = null;
+                       this.speed = { x: 0, y: 0 };
+                       this.board.resetSnakeAndLadders();
+                        return;
+                }
+                       this.forAnimate.position.y += this.speed.y;
+                       this.forAnimate.position.x += this.speed.x;
+                
+                this.board.canvas_module.clear_board();
+                this.board.resetBoard(this.player.color);
+                console.log('check2');
+                
+                this.board.canvas_module.draw_circle(this.forAnimate.position, this.player.color);
+                requestAnimationFrame(this.animate2.bind(this));
+        }
+        checkForSnakeAndLadder() {
+                if (!this.forAnimate) return;
+                const square = this.forAnimate.FinalSquare;
+                const snakeLadder = square.snakeorladder
+                if (!snakeLadder||snakeLadder.startSquare.position.num!==this.forAnimate.FinalSquare.position.num) return;
+                const {  endSquare, speed } = snakeLadder;
+                this.speed = { ...speed };
+                this.forAnimate.FinalSquare = endSquare;
+                console.log('check1');
+                
+                requestAnimationFrame(this.animate2.bind(this));
         }
         
  takeStep(){
@@ -101,7 +138,7 @@ export default class Move{
                 const width = this.board.canvas_module.squareWidth;
                 const height = this.board.canvas_module.squareHeight;
                 const { position, FinalSquare } = this.forAnimate;
-                if (this.CheckCoor(position, NextSquare.position, width, height)) {
+                if (this.CheckCoor(position, NextSquare.position)) {
                         if (NextSquare.position.num === FinalSquare.position.num) return true;
                         this.forAnimate.position.num =  NextSquare.position.num;
                         this.forAnimate.nextSquare = this.getNextSquares();
@@ -110,7 +147,7 @@ export default class Move{
                 return  false;
         }
         
-        CheckCoor(InitPos: Position, FinalPos: Position,width:number,height:number) {
+        CheckCoor(InitPos: Position, FinalPos: Position) {
                 return (InitPos.x >= FinalPos.x && InitPos.x < FinalPos.x + 7
                         && InitPos.y >= FinalPos.y && InitPos.y < FinalPos.y + 7)        
         }

@@ -1,13 +1,14 @@
 import Position from "./position";
 import Player from "./player"; 
 import Canvas_Module from "./canvas_module";
+import {Snake,Ladder} from "./snakeandladder";
 
 export default class Square{
         color: string;
         players:Player[] = [];
         position: Position;
         canvas_module: Canvas_Module;
-        snakeorladder = null;
+        snakeorladder:Snake|Ladder | null = null;
         
         constructor(color: string, position: Position,canvas_module:Canvas_Module) {
                 this.color = color;

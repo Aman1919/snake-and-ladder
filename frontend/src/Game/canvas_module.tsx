@@ -59,4 +59,28 @@ export default class Canvas_Module{
                 this.context.strokeRect(x, y, this.squareWidth, this.squareHeight)
                 this.context.closePath()
         }
+        
+        save() {
+                this.context.save();
+        } 
+        
+        restore() {
+                this.context.restore();
+        }
+        
+        rotate(angle: number) {
+                this.context.rotate(angle);
+        }
+        
+        draw_image(Image:HTMLImageElement, x:number, y:number, width:number, height:number){
+        try{
+            if(Image !==undefined){
+                this.context.beginPath();
+                this.context.drawImage(Image, x, y,width, height);
+                this.context.closePath();
+            }
+        }catch(err){
+            console.error('Draw Image - '+ err);
+        }
+    };
 }

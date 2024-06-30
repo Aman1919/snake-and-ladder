@@ -5,10 +5,10 @@ enum squareColor{
 
 const playersColor = [
         'red',
-         'blue',
+        'blue',
         'green',
-         'yellow'
+        'yellow'
 ]
-
+        ;
 
 export { squareColor,playersColor}

@@ -2,6 +2,7 @@ import Board from './board';
 import Move from './move';
 import Player from './player';
 import { playersColor } from './utils';
+
 export default class Game{
         Board: Board;
         turn: number = 0;
@@ -10,7 +11,7 @@ export default class Game{
         constructor(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
                 this.Board = new Board(context, canvas);
                 this.move = new Move(this.Board);
-                this.createPlayer();        
+                this.createPlayer();     
         }
         
         createPlayer() {
@@ -24,7 +25,14 @@ export default class Game{
         }
         
         DiceRolled(DiceNumber: number) {
-                const player =  this.players[this.turn]
+                const player = this.players[this.turn]
+                const pos = player.position.num + DiceNumber;
+                if (pos > 100) {
+                        return; 
+                }
+                if (pos === 100) {
+                alert(player.color + " : won")
+                }
                 this.move.move(player,DiceNumber);
                 this.ChangeTurn();
         }
