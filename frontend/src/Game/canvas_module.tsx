@@ -39,7 +39,7 @@ export default class Canvas_Module{
                 const { x, y } = position;
                 this.context.beginPath()
                 this.context.fillStyle = color;
-                this.context.arc(x +this.squareWidth/2 + 10 *i  - 7 ,y + this.squareHeight/2,25, 0, 2 * Math.PI);
+                this.context.arc(x +this.squareWidth/2 + 10 *i  - 7 ,y + this.squareHeight/2,this.squareWidth/2-4, 0, 2 * Math.PI);
                 this.context.fill();
         }
         

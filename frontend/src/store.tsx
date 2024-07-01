@@ -10,4 +10,13 @@ const isAnimateAtom = atom({
         default:false
 })
 
-export { DiceAtom ,isAnimateAtom};
+const turnAtom = atom({
+        key: 'turnAtom',
+        default: ""
+})
+
+const playersAtom = atom({
+        key: "PlayersAtom",
+        default: [] as { username: string; color: string; }[]
+})
+export { DiceAtom ,isAnimateAtom,turnAtom,playersAtom};

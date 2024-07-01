@@ -8,15 +8,15 @@ export default class Game{
         turn: number = 0;
         move: Move;
         players: Player[] = [];
-        constructor(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
+        constructor(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement,playernumber:number=2) {
                 this.Board = new Board(context, canvas);
                 this.move = new Move(this.Board);
-                this.createPlayer();     
+                this.createPlayer(playernumber);     
         }
         
-        createPlayer() {
+        createPlayer(pl:number) {
                 
-                for (let i = 0;i<2;i++){
+                for (let i = 0;i<pl;i++){
                   this.players.push(new Player(playersColor[i],this.Board.Squares[0].position,this.Board.canvas_module))
                 }
                 this.players.forEach(pl => {
@@ -41,6 +41,20 @@ export default class Game{
                 this.turn = this.turn + 1;
                 if (this.turn === this.players.length) this.turn = 0;
         }
+
+        getPlayers() {
+                const players: { username: string; color: string; }[] = [];
+                
+                this.players.forEach(p => {
+                        players.push({ username: p.username, color: p.color });
+                })
+                return players;
+        }        
+        
+        getTurnPlayer() {
+                return this.players[this.turn].color;
+        }
+        
         
         isAnimating() {
                 return (this.move.forAnimate === null);

@@ -1,36 +1,40 @@
-import { DiceAtom, isAnimateAtom } from "./store";
-import { RecoilRoot, useRecoilState, useRecoilValue } from "recoil";
-import Canvas from "./Game/canvas";
-
+import { useState } from "react";
+import OfflineGame from "./game";
 function App() {
+  const [click, setClick] = useState('');
+  const [NoOfPlayer, setNoofPlayer] = useState(0);
+  function offline() {
+  let a = prompt("Enter No. Player to be player");
+  
+  if (a !== null) {
+    let b = parseInt(a, 10);
+    if (b >= 2 && b <= 4) {
+      setNoofPlayer(b);
+      setClick('offline');
+    } else {
+      alert("Please enter a number between 2 and 4.");
+    }
+  } else {
+    alert("Input cannot be empty.");
+  }
+}
+  
   return (
     <div className="App">
       <h1>Snake and ladder Game</h1>
-      <div className="con">
-        <RecoilRoot>
-        <Canvas></Canvas>
-          <Dice />
-          </RecoilRoot>
-      </div>
+      {(click==='')?<><button onClick={()=>setClick('online')}>Online</button>
+    <button onClick={offline}>Offline</button> </>: ''}
+      
+      {(click === 'offline') ? <OfflineGame noOfPlayers={NoOfPlayer} /> : ''}
+      {(click === 'online') ? 'online' : ''}
+      
     </div>
   );
 }
 
-const Dice = () => {
-  const [num, setNum] = useRecoilState(DiceAtom);
-  const isAnimate = useRecoilValue(isAnimateAtom)
-   function Roll() {
-     if (isAnimate) return;
-     const a = Math.floor(Math.random() * 6) + 1;
-     setNum(a);
-        }
-  return (
-    <div>
-      <p>Roll Number: { num}</p> 
-    <button onClick={Roll}>Roll</button>
-    </div>
-)
 
-}
+
+
+
 
 export default App;
