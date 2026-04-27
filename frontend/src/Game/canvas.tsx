@@ -3,7 +3,7 @@ import Game from "./game";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { DiceAtom, isAnimateAtom, playersAtom, turnAtom } from "../store";
 
-export default function Canvas() {
+export default function Canvas({noOfPlayers}:{noOfPlayers:number}) {
        const canvasRef = useRef<HTMLCanvasElement>(null)
         const DiceNumber = useRecoilValue(DiceAtom)
         const [game, setGame] = useState<null | Game>(null)
@@ -18,11 +18,11 @@ export default function Canvas() {
                 const ctx = canvas.getContext('2d');
                 if (!ctx) return
                 
-                const g = new Game(ctx, canvas);
+                const g = new Game(ctx, canvas,noOfPlayers);
                 setPlayers(g.getPlayers())
                 setTurn(g.getTurnPlayer());
                 setGame(g);
-        }, [canvasRef])
+        }, [canvasRef,noOfPlayers])
         
         useEffect(() => {
                 if (!game||DiceNumber===0) return;

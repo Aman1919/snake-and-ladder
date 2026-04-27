@@ -22,12 +22,7 @@ function App() {
   return (
     <div className="App">
       <h1>Snake and ladder Game</h1>
-      {(click==='')?<><button onClick={()=>setClick('online')}>Online</button>
-    <button onClick={offline}>Offline</button> </>: ''}
-      
-      {(click === 'offline') ? <OfflineGame noOfPlayers={NoOfPlayer} /> : ''}
-      {(click === 'online') ? 'online' : ''}
-      
+      {(click === 'offline') ? <OfflineGame noOfPlayers={NoOfPlayer} /> : <button onClick={offline}>Play Game</button>}
     </div>
   );
 }

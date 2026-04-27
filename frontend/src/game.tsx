@@ -1,24 +1,16 @@
 import { DiceAtom, isAnimateAtom, playersAtom, turnAtom } from "./store";
 import { RecoilRoot, useRecoilState, useRecoilValue } from "recoil";
 import Canvas from "./Game/canvas";
-import { useState } from "react";
 
 type offlinetype = {noOfPlayers: number}
 
 export default function OfflineGame({ noOfPlayers }:offlinetype) {
-        const [players, setPlayers] = useState(['']);
-        function Initplayers() {
-                const res = [];
-                for (let i = 0; i < noOfPlayers; i++)res.push('Player' + (i + 1))
-                setPlayers(res);
-        }
-        
         
         return (
 <div className="con">
         <RecoilRoot>
           <PlayerTurn/>
-          <Canvas></Canvas>
+          <Canvas noOfPlayers={noOfPlayers}></Canvas>
           <Dice />
         </RecoilRoot>
       </div>

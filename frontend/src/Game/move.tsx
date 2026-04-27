@@ -135,8 +135,8 @@ export default class Move{
                         this.forAnimate.nextSquare = NextSquare;
                 if (!NextSquare) return;
                 }
-                const width = this.board.canvas_module.squareWidth;
-                const height = this.board.canvas_module.squareHeight;
+                // const width = this.board.canvas_module.squareWidth;
+                // const height = this.board.canvas_module.squareHeight;
                 const { position, FinalSquare } = this.forAnimate;
                 if (this.CheckCoor(position, NextSquare.position)) {
                         if (NextSquare.position.num === FinalSquare.position.num) return true;
